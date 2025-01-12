@@ -21,7 +21,6 @@ typedef struct {
 }football_match;
 
 football_match matches[MAX];
-//int pipes[MAX][2];
 
 int main() {
 	
@@ -33,7 +32,7 @@ int main() {
     struct sockaddr_in server_addr, client_addr;
     socklen_t client_len = sizeof(client_addr);
 
-//create socket file descriptor
+    //create socket file descriptor
     server_socket = socket(AF_INET, SOCK_STREAM, 0);
     if (server_socket == -1) {
         perror("Error creating socket");
@@ -42,15 +41,15 @@ int main() {
 
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(PORT);
-    server_addr.sin_addr.s_addr = INADDR_ANY; //gia na sundethw se opoia ip thelw
+    server_addr.sin_addr.s_addr = INADDR_ANY; 
 
-//anathesh tou socket sthn dieu8unsh
+    //bind socked to the address
     if (bind(server_socket, (struct sockaddr *)&server_addr, sizeof(server_addr)) == -1) {
         perror("Error binding");
         close(server_socket);
         exit(EXIT_FAILURE);
     }
-//akroash gia sundeseis twn clients
+    //Listening for client connections
     if (listen(server_socket, 10) == -1) {
         perror("Error listening");
         close(server_socket);
@@ -60,7 +59,7 @@ int main() {
     printf("Server listening on port 4444...\n");
 
     while (1) {
-        client_socket=accept(server_socket, (struct sockaddr)&client_addr, &client_len);
+        client_socket=accept(server_socket, (struct sockaddr *)&client_addr, &client_len);
         if (client_socket == -1) {
             perror("Error accepting connection");
             continue;
@@ -83,7 +82,6 @@ int main() {
 
         // This is the parent process
         close(client_socket);
-        //perimenw to child process
         while (waitpid(-1, NULL, WNOHANG) > 0);
 
         for (int i = 0; i < MAX; i++) 
@@ -92,7 +90,7 @@ int main() {
         read(pipes[i][0], &updated_tickets, sizeof(int));
         matches[i].available_tickets = updated_tickets;
     }
-
+    close(server_socket);
     return 0;
 }
 

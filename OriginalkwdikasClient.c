@@ -21,7 +21,9 @@ int main()
         printf("ERROR IN CONNECTION\n");
         exit(EXIT_FAILURE);
     }
-    memset(&serverAddr, '\0,sizeof(serverAddr));
+    printf("[+]Client Socket created successfully.\n");
+
+    memset(&serverAddr,0,sizeof(serverAddr));
     serverAddr.sin_family =AF_INET;
     serverAddr.sin_port=htons(PORT);
     serverAddr.sin_addr.s_addr = INADDR_ANY; //mporw na sundethw se opoiadhpote dieu8unsh thelw
@@ -30,9 +32,13 @@ int main()
     ret=connect(clientSocket,(struct sockaddr*)&serverAddr,sizeof(serverAddr));
     if(ret < 0){
         printf("[-]Error in connection.\n");
-        exit(1);
+        exit(EXIT_FAILURE);
     }
-//rand() opws kai ston server
+    printf("Connected to server.\n");
+
+    srand(time(NULL));
+
+    //Generationg random match ID and number of ickets
     int match_id = rand() % 10;
     int num_tickets = rand() % 3 + 1;
 
